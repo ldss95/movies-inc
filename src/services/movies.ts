@@ -1,5 +1,6 @@
 import {
 	FullMovieProps,
+	MovieAccountState,
 	MovieCreditsProps,
 	SummaryMovieProps,
 } from '@/types/movie';
@@ -78,5 +79,22 @@ export async function fetchMovieCreditsById(
 		},
 	);
 
+	return data;
+}
+
+export async function addMovieRating(movieId: number, rating: number) {
+	await http.post(`/movie/${movieId}/rating`, {
+		value: rating,
+	});
+}
+
+export async function fetchMovieAccountStates(
+	movieId: number,
+	signal: AbortSignal,
+) {
+	const { data } = await http.get<MovieAccountState>(
+		`/movie/${movieId}/account_states`,
+		{ signal },
+	);
 	return data;
 }

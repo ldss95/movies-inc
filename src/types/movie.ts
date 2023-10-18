@@ -92,3 +92,12 @@ export interface MovieCastProps {
 	credit_id: string;
 	order: number;
 }
+
+export interface MovieAccountState {
+	id: number;
+	favorite: boolean;
+	rated: {
+		value: number;
+	};
+	watchlist: boolean;
+}

@@ -14,11 +14,14 @@ import { MovieDetailsScreenProps } from '@/types/navigation';
 import { getImageUrl } from '@/utils/helpers';
 import { useFetchMovieById } from '@/hooks/useMovies';
 import MovieGenresList from './components/MovieGenresList';
+import Rating from './components/Rating';
 
 function MovieDetailsScreen({ navigation, route }: MovieDetailsScreenProps) {
 	const { movie } = route.params;
 	const insets = useSafeAreaInsets();
-	const [fullMovie, loadingFullMovie] = useFetchMovieById(movie.id);
+	const [fullMovie, loadingFullMovie, _, reload] = useFetchMovieById(
+		movie.id,
+	);
 
 	return (
 		<ScrollView>
@@ -53,6 +56,8 @@ function MovieDetailsScreen({ navigation, route }: MovieDetailsScreenProps) {
 					}>
 					<Text style={styles.showCastButtonText}>Ver Elenco</Text>
 				</TouchableOpacity>
+
+				<Rating movieId={movie.id} onRatingSend={reload} />
 			</View>
 		</ScrollView>
 	);

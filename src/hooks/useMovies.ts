@@ -5,8 +5,11 @@ import {
 	SummaryMovieProps,
 	FullMovieProps,
 	MovieCastProps,
+	MovieAccountState,
 } from '@/types/movie';
 import {
+	addMovieRating,
+	fetchMovieAccountStates,
 	fetchMovieById,
 	fetchMovieCreditsById,
 	fetchWatchingMovies,
@@ -62,6 +65,7 @@ type UseFetchMovieByIdType = [
 	FullMovieProps | null,
 	boolean,
 	AxiosError | null,
+	() => void,
 ];
 
 export const useFetchMovieById = (id: number): UseFetchMovieByIdType => {
@@ -102,7 +106,7 @@ export const useFetchMovieById = (id: number): UseFetchMovieByIdType => {
 		}
 	}
 
-	return [movie, loading, error];
+	return [movie, loading, error, load];
 };
 
 type UseFetchMovieCastType = [MovieCastProps[], boolean, AxiosError | null];
@@ -146,4 +150,75 @@ export const useFetchMovieCast = (id: number): UseFetchMovieCastType => {
 	}
 
 	return [cast, loading, error];
+};
+
+type UseAddMovieRatingType = [
+	(movieId: number, rating: number, onDone?: () => void) => void,
+	boolean,
+	AxiosError | null,
+];
+
+export const useAddMovieRating = (): UseAddMovieRatingType => {
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<AxiosError | null>(null);
+
+	async function handleAddRating(
+		movieId: number,
+		rating: number,
+		onDone?: () => void,
+	) {
+		try {
+			setLoading(true);
+			setError(null);
+			await addMovieRating(movieId, rating);
+			onDone && onDone();
+		} catch (error) {
+			setError(error as AxiosError);
+		} finally {
+			setLoading(false);
+		}
+	}
+
+	return [handleAddRating, loading, error];
+};
+
+type UseFetchMovieAccountStateType = [
+	MovieAccountState | null,
+	boolean,
+	AxiosError | null,
+	() => void,
+];
+
+export const useFetchMovieAccountState = (
+	movieId: number,
+): UseFetchMovieAccountStateType => {
+	const [movieAccount, setMovieAccount] = useState<MovieAccountState | null>(
+		null,
+	);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<AxiosError | null>(null);
+	const controllerRef = useRef<AbortController | null>(null);
+	const isMounted = useRef<boolean>(true);
+
+	useEffect(() => {
+		load();
+		return () => handleHookUnmount(isMounted, controllerRef);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	async function load() {
+		try {
+			setLoading(true);
+			setError(null);
+			const signal = handleAbort(controllerRef);
+			const data = await fetchMovieAccountStates(movieId, signal);
+			setMovieAccount(data);
+		} catch (error) {
+			setError(error as AxiosError);
+		} finally {
+			setLoading(false);
+		}
+	}
+
+	return [movieAccount, loading, error, load];
 };
