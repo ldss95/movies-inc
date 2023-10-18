@@ -14,7 +14,6 @@ import { MovieDetailsScreenProps } from '@/types/navigation';
 import { getImageUrl } from '@/utils/helpers';
 import { useFetchMovieById } from '@/hooks/useMovies';
 import MovieGenresList from './components/MovieGenresList';
-import Cast from './components/Cast';
 
 function MovieDetailsScreen({ navigation, route }: MovieDetailsScreenProps) {
 	const { movie } = route.params;
@@ -46,9 +45,14 @@ function MovieDetailsScreen({ navigation, route }: MovieDetailsScreenProps) {
 				/>
 
 				<Text style={styles.overview}>{movie.overview}</Text>
-				<View style={styles.lineDivider} />
 
-				<Cast movieId={movie.id} />
+				<TouchableOpacity
+					style={styles.showCastButton}
+					onPress={() =>
+						navigation.navigate('MovieCast', { movieId: movie.id })
+					}>
+					<Text style={styles.showCastButtonText}>Ver Elenco</Text>
+				</TouchableOpacity>
 			</View>
 		</ScrollView>
 	);
@@ -75,13 +79,6 @@ const styles = StyleSheet.create({
 		marginTop: -150,
 	},
 	divider: { height: 30 },
-	lineDivider: {
-		width: '100%',
-		height: 1,
-		backgroundColor: '#fff',
-		opacity: 0.5,
-		marginVertical: 10,
-	},
 	poster: {
 		width: '100%',
 		height: 500,
@@ -100,6 +97,19 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 		opacity: 0.9,
 		color: '#fff',
+	},
+	showCastButton: {
+		marginVertical: 30,
+		width: '100%',
+		height: 40,
+		borderRadius: 5,
+		backgroundColor: '#fff',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	showCastButtonText: {
+		color: '#000',
+		fontWeight: 'bold',
 	},
 });
 

@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StackParamsList } from '@/types/navigation';
 import HomeScreen from '@/screens/home';
 import MovieDetailsScreen from '@/screens/movie-details';
+import MovieCastScreen from '@/screens/movie-cast';
 
 const Stack = createNativeStackNavigator<StackParamsList>();
 
@@ -21,6 +22,14 @@ function App() {
 					name="MovieDetails"
 					component={MovieDetailsScreen}
 					options={{ headerShown: false }}
+				/>
+				<Stack.Screen
+					name="MovieCast"
+					component={MovieCastScreen}
+					options={{
+						title: 'Actores y Actrices',
+						presentation: 'modal',
+					}}
 				/>
 			</Stack.Navigator>
 		</NavigationContainer>
