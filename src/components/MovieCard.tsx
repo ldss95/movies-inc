@@ -12,7 +12,10 @@ interface MovieCardProps {
 
 const MovieCard = (props: MovieCardProps) => {
 	return (
-		<TouchableOpacity style={styles.container} onPress={props.onPress}>
+		<TouchableOpacity
+			style={styles.container}
+			onPress={props.onPress}
+			testID="movie-card-container">
 			<Image source={{ uri: props.posterUrl }} style={styles.image} />
 
 			<Text style={styles.title}>{props.title}</Text>

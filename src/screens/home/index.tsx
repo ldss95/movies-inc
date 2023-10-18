@@ -20,6 +20,7 @@ function HomeScreen({ navigation }: HomeScreenProps) {
 
 			<FlatList
 				data={movies}
+				testID="watching-movies-list"
 				refreshing={loading}
 				onRefresh={reload}
 				style={styles.listContainer}

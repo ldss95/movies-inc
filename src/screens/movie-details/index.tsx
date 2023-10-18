@@ -24,7 +24,7 @@ function MovieDetailsScreen({ navigation, route }: MovieDetailsScreenProps) {
 	);
 
 	return (
-		<ScrollView>
+		<ScrollView testID="detailed-movie-screen">
 			<TouchableOpacity
 				onPress={() => navigation.goBack()}
 				style={[styles.backButton, { top: insets.top + 20 }]}>
@@ -51,6 +51,7 @@ function MovieDetailsScreen({ navigation, route }: MovieDetailsScreenProps) {
 
 				<TouchableOpacity
 					style={styles.showCastButton}
+					testID="show-cast-button"
 					onPress={() =>
 						navigation.navigate('MovieCast', { movieId: movie.id })
 					}>

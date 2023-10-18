@@ -31,6 +31,11 @@ npm install
 npm start
 ```
 
+- Correr pruebas end-to-end:
+```sh
+npm run test
+```
+
 
 - Estructura
   - `App.tsx` (Configuración de Navegación):

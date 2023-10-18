@@ -21,7 +21,7 @@ function MovieCastScreen({ route }: MovieCastScreenProps) {
 	const [cast, loading] = useFetchMovieCast(movieId);
 
 	return (
-		<View>
+		<View testID="cast-container">
 			<RenderIf condition={loading}>
 				<ActivityIndicator color="#000" />
 			</RenderIf>

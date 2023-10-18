@@ -36,9 +36,10 @@ const Rating = ({ movieId, onRatingSend }: RatingProps) => {
 	}
 
 	return (
-		<View style={styles.container}>
+		<View style={styles.container} testID="rating-container">
 			{Array.from({ length: 5 }).map((_, index) => (
 				<TouchableOpacity
+					testID={'rating-button-' + (index + 1)}
 					key={'star-' + index}
 					onPress={() => onPressStar(index)}>
 					<Image
