@@ -32,7 +32,7 @@ const Rating = ({ movieId, onRatingSend }: RatingProps) => {
 		// Los votos recien agregados tienen un pequeño retraso
 		setTimeout(() => {
 			reload();
-		}, 500);
+		}, 1000);
 	}
 
 	return (
