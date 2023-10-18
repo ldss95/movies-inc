@@ -4,7 +4,7 @@ import { FlatList, SafeAreaView, Text, StyleSheet } from 'react-native';
 import { useFetchWatchingMovies } from '@/hooks/useMovies';
 import { getImageUrl } from '@/utils/helpers';
 import { RenderIf } from '@/components';
-import MovieCard from '@/components/MovieCard';
+import MovieCard from './components/MovieCard';
 import { HomeScreenProps } from '@/types/navigation';
 
 function HomeScreen({ navigation }: HomeScreenProps) {
