@@ -1,19 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
 import { AxiosError } from 'axios';
 
-import { MovieProps } from '@/types/movie';
-import { fetchWatchingMovies } from '@/services/movies';
+import {
+	SummaryMovieProps,
+	FullMovieProps,
+	MovieCastProps,
+} from '@/types/movie';
+import {
+	fetchMovieById,
+	fetchMovieCreditsById,
+	fetchWatchingMovies,
+} from '@/services/movies';
 import { handleAbort, handleHookUnmount } from '@/utils/helpers';
 
 type UseFetchWatchingMoviesType = [
-	MovieProps[],
+	SummaryMovieProps[],
 	boolean,
 	AxiosError | null,
 	() => void,
 ];
 
 export const useFetchWatchingMovies = (): UseFetchWatchingMoviesType => {
-	const [movies, setMovies] = useState<MovieProps[]>([]);
+	const [movies, setMovies] = useState<SummaryMovieProps[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<AxiosError | null>(null);
 	const controllerRef = useRef<AbortController | null>(null);
@@ -48,4 +56,94 @@ export const useFetchWatchingMovies = (): UseFetchWatchingMoviesType => {
 	}
 
 	return [movies, loading, error, load];
+};
+
+type UseFetchMovieByIdType = [
+	FullMovieProps | null,
+	boolean,
+	AxiosError | null,
+];
+
+export const useFetchMovieById = (id: number): UseFetchMovieByIdType => {
+	const [movie, setMovie] = useState<FullMovieProps | null>(null);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<AxiosError | null>(null);
+	const controllerRef = useRef<AbortController | null>(null);
+	const isMounted = useRef<boolean>(true);
+
+	useEffect(() => {
+		if (!id) {
+			return;
+		}
+
+		load();
+
+		return () => handleHookUnmount(isMounted, controllerRef);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [id]);
+
+	async function load() {
+		try {
+			setLoading(true);
+			setError(null);
+			const signal = handleAbort(controllerRef);
+			const data = await fetchMovieById({ signal, movieId: id });
+			if (isMounted) {
+				setMovie(data);
+			}
+		} catch (error) {
+			if (isMounted) {
+				setError(error as AxiosError);
+			}
+		} finally {
+			if (isMounted) {
+				setLoading(false);
+			}
+		}
+	}
+
+	return [movie, loading, error];
+};
+
+type UseFetchMovieCastType = [MovieCastProps[], boolean, AxiosError | null];
+
+export const useFetchMovieCast = (id: number): UseFetchMovieCastType => {
+	const [cast, setCast] = useState<MovieCastProps[]>([]);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<AxiosError | null>(null);
+	const controllerRef = useRef<AbortController | null>(null);
+	const isMounted = useRef<boolean>(true);
+
+	useEffect(() => {
+		if (!id) {
+			return;
+		}
+
+		load();
+
+		return () => handleHookUnmount(isMounted, controllerRef);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [id]);
+
+	async function load() {
+		try {
+			setLoading(true);
+			setError(null);
+			const signal = handleAbort(controllerRef);
+			const data = await fetchMovieCreditsById({ signal, movieId: id });
+			if (isMounted) {
+				setCast(data.cast);
+			}
+		} catch (error) {
+			if (isMounted) {
+				setError(error as AxiosError);
+			}
+		} finally {
+			if (isMounted) {
+				setLoading(false);
+			}
+		}
+	}
+
+	return [cast, loading, error];
 };

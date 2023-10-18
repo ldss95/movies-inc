@@ -1,4 +1,8 @@
-import { MovieProps } from '@/types/movie';
+import {
+	FullMovieProps,
+	MovieCreditsProps,
+	SummaryMovieProps,
+} from '@/types/movie';
 import http from '@/utils/http';
 
 interface FetchWatchingMoviesParams {
@@ -9,7 +13,7 @@ interface FetchWatchingMoviesParams {
 }
 
 interface FetchWatchingMoviesResponse {
-	results: MovieProps[];
+	results: SummaryMovieProps[];
 	dates: {
 		maximum: string;
 		minimum: string;
@@ -20,7 +24,7 @@ interface FetchWatchingMoviesResponse {
 }
 
 export async function fetchWatchingMovies(params: FetchWatchingMoviesParams) {
-	const { region = 'DO', language = 'en-US', page = 1, signal } = params;
+	const { region = 'DO', language = 'es-US', page = 1, signal } = params;
 	const { data } = await http.get<FetchWatchingMoviesResponse>(
 		'/movie/now_playing',
 		{
@@ -28,6 +32,47 @@ export async function fetchWatchingMovies(params: FetchWatchingMoviesParams) {
 				language,
 				region,
 				page,
+			},
+			signal,
+		},
+	);
+
+	return data;
+}
+
+interface FetchMovieByIdParams {
+	language?: string;
+	movieId: number;
+	signal: AbortSignal;
+}
+
+export async function fetchMovieById(params: FetchMovieByIdParams) {
+	const { language = 'es-US', movieId, signal } = params;
+	const { data } = await http.get<FullMovieProps>(`/movie/${movieId}`, {
+		params: {
+			language,
+		},
+		signal,
+	});
+
+	return data;
+}
+
+interface FetchMovieCreditsByIdParams {
+	language?: string;
+	movieId: number;
+	signal: AbortSignal;
+}
+
+export async function fetchMovieCreditsById(
+	params: FetchMovieCreditsByIdParams,
+) {
+	const { language = 'es-US', movieId, signal } = params;
+	const { data } = await http.get<MovieCreditsProps>(
+		`/movie/${movieId}/credits`,
+		{
+			params: {
+				language,
 			},
 			signal,
 		},

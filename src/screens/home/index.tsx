@@ -5,16 +5,19 @@ import { useFetchWatchingMovies } from '@/hooks/useMovies';
 import { getImageUrl } from '@/utils/helpers';
 import { RenderIf } from '@/components';
 import MovieCard from '@/components/MovieCard';
+import { HomeScreenProps } from '@/types/navigation';
 
-function HomeScreen() {
+function HomeScreen({ navigation }: HomeScreenProps) {
 	const [movies, loading, error, reload] = useFetchWatchingMovies();
 
 	return (
 		<SafeAreaView>
 			<Text style={styles.title}>MoviesInc</Text>
+
 			<RenderIf condition={error !== null}>
 				<Text>Ha ocurrido un error!</Text>
 			</RenderIf>
+
 			<FlatList
 				data={movies}
 				refreshing={loading}
@@ -28,6 +31,9 @@ function HomeScreen() {
 						voteAverage={item.vote_average}
 						releaseDate={item.release_date}
 						posterUrl={getImageUrl(item.poster_path, 500)}
+						onPress={() =>
+							navigation.navigate('MovieDetails', { movie: item })
+						}
 					/>
 				)}
 			/>
