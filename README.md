@@ -36,8 +36,16 @@ npm start
 npm run test
 ```
 
+**Ejecutar en iOS!**
 
-- Estructura
+Antes de poder levantar o compilar el proyecto para `iOS` es necesario instalar los `Pods`
+```sh
+cd ios
+pod install
+```
+
+
+### Estructura
   - `App.tsx` (Configuración de Navegación):
   - `src`
     - `types` (Interfaces): Contiene definiciones de interfaces TypeScript.
